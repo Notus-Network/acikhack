@@ -2,6 +2,14 @@
 
 Bu kütüphane, görsellerin watermark olarak imzalanması için oluşturulmuş bir kütüphanedir.
 
+## Bağımlılıklar
+
+Microsoft tarafından geliştirilen System.Drawing.Common kitaplığını kullanmaktadır.
+
+### Nuget
+
+- [**System.Drawing.Common**](https://www.nuget.org/packages/System.Drawing.Common/6.0.0)
+
 ## Kütüphanede bulunan tüm elemanlar 
 
 ### Sınıflar
