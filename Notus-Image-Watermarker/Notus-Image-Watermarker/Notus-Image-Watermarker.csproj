@@ -3,6 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Notus_Image_Watermarker</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Company>Notus Network</Company>
+    <Authors>Mehmet KIRCAL</Authors>
+    <Description>Bu kütüphane, görsellerin watermark olarak imzalanması için oluşturulmuş bir kütüphanedir.</Description>
   </PropertyGroup>
 
   <ItemGroup>
