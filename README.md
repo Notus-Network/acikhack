@@ -14,7 +14,7 @@ Amacımız : NFT olarak oluşturulan Ses, Görsel, PDF gibi dökümanların Arwe
 
 ## Bağımlılıklar
 
-Notus Network tarafından geliştirilen Web3 ve Core kitaplarını kullanmaktadır.
+Notus Network tarafından geliştirilen Web3 ve Core kitaplıklarını kullanmaktadır.
 
 ### Github
 
