@@ -1,2 +1,2 @@
-# acikhack
-Açık Hack Hackathonu
+# Açık Hack Hackathonu
+Projemiz
