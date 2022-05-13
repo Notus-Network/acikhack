@@ -23,9 +23,18 @@ namespace Notus_Image_Watermarker_Demo
             openFileDialog1.Filter = "JPG Dosyası (*.jpg)|*.jpg|PNG Dosyası (*.png)|*.png";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                Notus.Image.Watermarker.Watermarker.ProtectionLevel protectionLevel = (Notus.Image.Watermarker.Watermarker.ProtectionLevel)comboBox1.SelectedIndex;
+                bool isLight = false;
+                if (comboBox2.SelectedIndex == 0)
+                    isLight = true;
+                else
+                    isLight = false;
+
                 try
                 {
-                    var sr = new StreamReader(openFileDialog1.FileName);
+                    Notus.Image.Watermarker.Watermarker.AddWatermarkToImage(openFileDialog1.FileName, "tmp" + Path.GetExtension(openFileDialog1.FileName), "testwalletkey", protectionLevel, isLight);
+                    pictureBox1.Image = Image.FromFile(openFileDialog1.FileName);
+                    pictureBox2.Image = Image.FromFile("tmp" + Path.GetExtension(openFileDialog1.FileName));
                 } catch { }
             }
         }

@@ -36,19 +36,19 @@ namespace Notus.Image.Watermarker
             {
                 using Bitmap bitmap = (Bitmap)System.Drawing.Image.FromFile(sourceName); 
                 using Graphics graphic = Graphics.FromImage(bitmap);
-                using Brush brush = new SolidBrush(Color.FromArgb(Convert.ToInt32(values[4]), !imageIsLight ? Color.White : Color.Black));
+                using Brush brush = new SolidBrush(Color.FromArgb(Convert.ToInt32(values[3]), !imageIsLight ? Color.White : Color.Black));
 
                 SizeF textSize = graphic.MeasureString(walletKey, font);
                 graphic.SmoothingMode = SmoothingMode.HighQuality;
                 graphic.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
 
                 float t = 0, x = 0, y = 0;
-                for (int j = 1; j <= 20; j++, y += values[3])
+                for (int j = 1; j <= 20; j++, y += values[2])
                 {
                     x = 0;
                     if (j % 2 == 0)
                         t = (textSize.Width / 2);
-                    for (int i = 1; i <= 10; i++, x += values[2])
+                    for (int i = 1; i <= 10; i++, x += values[1])
                     {
                         graphic.DrawString(walletKey, font, brush, new PointF(x + t, y));
                         x += textSize.Width;
@@ -59,7 +59,7 @@ namespace Notus.Image.Watermarker
 
                 bitmap.Save(destinationPath);
                 return true;
-            } catch { return false; }
+            } catch (Exception ex) { Console.WriteLine(ex.Message); return false; }
         }
     }
 }

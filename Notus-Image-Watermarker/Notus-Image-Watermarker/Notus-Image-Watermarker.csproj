@@ -7,6 +7,7 @@
     <Company>Notus Network</Company>
     <Authors>Mehmet KIRCAL</Authors>
     <Description>Bu kütüphane, görsellerin watermark olarak imzalanması için oluşturulmuş bir kütüphanedir.</Description>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
