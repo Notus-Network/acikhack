@@ -7,6 +7,12 @@ Amacımız : NFT olarak oluşturulan Ses, Görsel, PDF gibi dökümanların Arwe
 ## Projenin Dosyalarının Tanımları
 **[Notus-Image-Watermarker]**: Bu kütüphane, görsellerin watermark olarak imzalanması için oluşturulmuş bir kütüphanedir.
 
+## Bağımlılıklar
+
+Notus Network tarafından geliştirilen Web3 ve Core kitaplarını kullanmaktadır.
+- [**Web3**](https://github.com/Notus-Network/Notus.Web3)
+- [**Core**](https://github.com/Notus-Network/Notus.Core)
+
 ## Ekip Üyeleri
 - [**Ömer Göksoy**](https://github.com/omergoksoy)
 - [**Mehmet Kırçal**](https://github.com/Iamknownasfesal)
