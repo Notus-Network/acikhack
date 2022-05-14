@@ -5,7 +5,8 @@
 Amacımız : NFT olarak oluşturulan Ses, Görsel, PDF gibi dökümanların Arweave, IPFS gibi platformlardan kopyalanarak farklı Network'lerde kopyalarının oluşturulmasının engellenmesi amacıyla oluşturulan bir çözümdür.
 
 ## Projenin Dosyalarının Tanımları
-**[Notus-Image-Watermarker]**: Bu kütüphane, görsellerin watermark olarak imzalanması için oluşturulmuş bir kütüphanedir.
+- **/Notus-Image-Watermarker**: Bu kütüphane, görsellerin watermark olarak imzalanması için oluşturulmuş bir kütüphanedir.
+- **/Notus-Image-Watermarker-Demo**: Bu proje, Notus Image Watermarker kütüphanesinin nasıl kullanacağının canlı bir demosudur.
 
 ## Yazılımsal Gereksinimler
 
