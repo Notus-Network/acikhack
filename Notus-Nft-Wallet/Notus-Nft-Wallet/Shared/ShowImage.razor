@@ -5,8 +5,9 @@
     <div class="form-group text-center">
         @if (!loading)
         {
-            <img @attributes="InputAttributes" />
-        } else
+            <img class="w-50 h-50" src="@imgBase64" />
+        }
+        else
         {
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
@@ -19,29 +20,26 @@
     </div>
 </div>
 
-@code { 
+@code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
     [Parameter] public string privateKey { get; set; }
     [Parameter] public string uid { get; set; }
     private string imgBase64 { get; set; }
     private bool loading { get; set; }
     async Task Close() => await BlazoredModal.CloseAsync(ModalResult.Ok(true));
-    public Dictionary<string, object> InputAttributes { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
-        InputAttributes = new Dictionary<string, object>();
         loading = true;
         Notus.Core.Variable.GenericSignStruct tmpSign = Notus.Core.MergeRawData.GenericSign(privateKey);
         imgBase64 = await Notus.Core.Function.FindAvailableNode($"nft/detail/{uid}", new Dictionary<string, string>()
-        {
+{
             {
                 "data",
                 JsonSerializer.Serialize(tmpSign)
             }
         }, Notus.Core.Variable.NetworkType.MainNet, Notus.Core.Variable.NetworkLayer.Layer2);
-        InputAttributes.Add("src", imgBase64);
-        InputAttributes.Add("class", "w-50 h-50");
         loading = false;
+        StateHasChanged();
     }
 }

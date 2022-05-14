@@ -56,6 +56,15 @@
         </div>
         <div class="tab-pane fade" id="createnft" role="tabpanel" aria-labelledby="createnft-tab">
             <InputFile OnChange="@LoadFiles" type="file" id="selectFile" />
+            <select @bind="protectionLevel" class="form-select" aria-label="Protection Level">
+                <option value="@Notus.Core.Variable.ProtectionLevel.Low" selected>Low Level</option>
+                <option value="@Notus.Core.Variable.ProtectionLevel.Medium">Medium Level</option>
+                <option value="@Notus.Core.Variable.ProtectionLevel.High">High Level</option>
+            </select>
+            <select @bind="isWatermarkLight" class="form-select" aria-label="Fotoğraf beyaza mı yatkın siyaha mı">
+                <option value="true" selected>Siyah</option>
+                <option value="false">Beyaz</option>
+            </select>
             @if (chunkMax != 0)
             {
                 <p>File Status: @chunkNow/@chunkMax</p>
@@ -71,6 +80,9 @@
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
     private int chunkNow = 0, chunkMax = 0;
     Dictionary<string, string> WatermarkedNFTS { get; set; }
+
+    Notus.Core.Variable.ProtectionLevel protectionLevel = Notus.Core.Variable.ProtectionLevel.Low;
+    string isWatermarkLight = "true";
 
     protected async override Task OnInitializedAsync()
     {
@@ -190,8 +202,8 @@
                 ChunkCount = chunkLength,
                 FileSize = e.File.Size,
                 FileHash = new Notus.HashLib.SHA256().Calculate(file),
-                Level = Notus.Core.Variable.ProtectionLevel.High,
-                WaterMarkIsLight = true,
+                Level = protectionLevel,
+                WaterMarkIsLight = Convert.ToBoolean(isWatermarkLight),
                 PublicKey = wallet.Wallet.PublicKey,
                 Sign = "",
             }
@@ -253,8 +265,10 @@
             chunk += chunkSize;
         }
 
+
         await Modal.Show<Confirm>().Result;
         chunkMax = 0;
+        chunkNow = 0;
         StateHasChanged();
 
         bool tmpStatusBool = true;
