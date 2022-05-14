@@ -1,7 +1,17 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
 
 <a href="/login">
     <button>
         Giriş Yap
     </button>
 </a>
+
+@code {
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        NavigationManager.NavigateTo("/login");
+        base.OnAfterRender(firstRender);
+    }
+}

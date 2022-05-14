@@ -39,6 +39,7 @@
                         </tbody>
                     </table>
                     <button @onclick="SendModal">Gönder</button>
+                    <button @onclick="Airdrop">Airdrop Al</button>
                 }
             }
         </div>
@@ -59,16 +60,25 @@
             </div>
         </div>
         <div class="tab-pane fade" id="createnft" role="tabpanel" aria-labelledby="createnft-tab">
-            <InputFile OnChange="@LoadFiles" type="file" id="selectFile" />
-            <select @bind="protectionLevel" class="form-select" aria-label="Protection Level">
-                <option value="@Notus.Core.Variable.ProtectionLevel.Low" selected>Low Level</option>
-                <option value="@Notus.Core.Variable.ProtectionLevel.Medium">Medium Level</option>
-                <option value="@Notus.Core.Variable.ProtectionLevel.High">High Level</option>
-            </select>
-            <select @bind="isWatermarkLight" class="form-select" aria-label="Fotoğraf beyaza mı yatkın siyaha mı">
-                <option value="false" selected>Siyah</option>
-                <option value="true">Beyaz</option>
-            </select>
+            <div class="form-group">
+                <label for="select2">Fotoğrafın korunma seviyesi</label>
+                <select @bind="protectionLevel" class="form-select" aria-label="Protection Level">
+                    <option value="@Notus.Core.Variable.ProtectionLevel.Low" selected>Low Level</option>
+                    <option value="@Notus.Core.Variable.ProtectionLevel.Medium">Medium Level</option>
+                    <option value="@Notus.Core.Variable.ProtectionLevel.High">High Level</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="select2">Seçtiğiniz fotoğraf koyu mu açık mı</label>
+                <select id="select2" @bind="isWatermarkLight" class="form-select" aria-label="Fotoğraf beyaza mı yatkın siyaha mı">
+                    <option value="true" selected>Siyah</option>
+                    <option value="false">Beyaz</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="select2">Fotoğraf Seçin.</label>
+                <InputFile OnChange="@LoadFiles" type="file" id="selectFile" />
+            </div>
             @if (chunkMax != 0)
             {
                 <p>File Status: @chunkNow/@chunkMax</p>
@@ -86,7 +96,7 @@
     Dictionary<string, string> WatermarkedNFTS { get; set; }
 
     Notus.Core.Variable.ProtectionLevel protectionLevel = Notus.Core.Variable.ProtectionLevel.Low;
-    string isWatermarkLight = "false";
+    string isWatermarkLight = "true";
 
     protected async override Task OnInitializedAsync()
     {
@@ -138,6 +148,11 @@
             }
             catch { }
         }
+    }
+
+    private async Task Airdrop()
+    {
+        await Notus.Web3.Application.AirDrop(wallet.Wallet.WalletKey);
     }
 
     private string getCurrencyLogoUrl(string currencyName)
