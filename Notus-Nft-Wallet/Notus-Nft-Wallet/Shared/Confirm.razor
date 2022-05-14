@@ -1,0 +1,18 @@
+﻿@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject IModalService ModalService
+
+<div class="simple-form">
+    <div class="form-group text-center">
+        <p class="m-0 bold">Başarılı bir şekilde yüklendi.</p>
+    </div>
+
+    <div class="form-group col">
+        <button  @onclick="Close" class="btn btn-primary w-100 float-left mt-2">Tamam</button>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    async Task Close() => await BlazoredModal.CloseAsync(ModalResult.Ok(true));
+}

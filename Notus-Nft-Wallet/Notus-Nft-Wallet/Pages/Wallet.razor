@@ -38,8 +38,29 @@
                 }
             }
         </div>
-        <div class="tab-pane fade" id="mynfts" role="tabpanel" aria-labelledby="mynfts-tab">My NFTs</div>
-        <div class="tab-pane fade" id="createnft" role="tabpanel" aria-labelledby="createnft-tab">Create NFT</div>
+        <div class="tab-pane fade" id="mynfts" role="tabpanel" aria-labelledby="mynfts-tab">
+            <div class="row">
+                @if (WatermarkedNFTS != null)
+                {
+                    @foreach (var item in WatermarkedNFTS)
+                    {
+                        <div class="m-3 card col-sm-3" style="width: 18rem;">
+                            <img class="mt-2" src="data:image/png;base64, @item.Value" alt="img">
+                            <div class="card-body text-center">
+                                <a style="cursor: pointer;" @onclick="async () => await ShowPrivateImage(item.Key)" class="btn btn-primary">Orjinal Halini Göster</a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="tab-pane fade" id="createnft" role="tabpanel" aria-labelledby="createnft-tab">
+            <InputFile OnChange="@LoadFiles" type="file" id="selectFile" />
+            @if (chunkMax != 0)
+            {
+                <p>File Status: @chunkNow/@chunkMax</p>
+            }
+        </div>
     </div>
 </div>
 
@@ -48,9 +69,12 @@
     Dictionary<string, string> BalanceResults { get; set; }
     List<Notus.Core.Variable.CurrencyList> currencyList { get; set; }
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
+    private int chunkNow = 0, chunkMax = 0;
+    Dictionary<string, string> WatermarkedNFTS { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
+        WatermarkedNFTS = new Dictionary<string, string>();
         try
         {
             wallet = await new Notus.Functions.General(sessionStorage).GetWalletFromSession();
@@ -65,6 +89,20 @@
         try
         {
             BalanceResults = await Notus.Web3.Application.Balance(wallet.Wallet.WalletKey);
+            // nft/list/walletkey
+            List<string> nftUIDlist = JsonSerializer.Deserialize<List<string>>(await Notus.Core.Function.FindAvailableNode(
+                $"nft/list/{wallet.Wallet.WalletKey}",
+                Notus.Core.Variable.NetworkType.MainNet,
+                Notus.Core.Variable.NetworkLayer.Layer2));
+
+            if (WatermarkedNFTS.Count < nftUIDlist.Count)
+            {
+                WatermarkedNFTS.Clear();
+                foreach (var item in nftUIDlist)
+                {
+                    WatermarkedNFTS.Add(item, await Notus.Core.Function.FindAvailableNode($"nft/detail/{wallet.Wallet.WalletKey}/{item}", Notus.Core.Variable.NetworkType.MainNet, Notus.Core.Variable.NetworkLayer.Layer2));
+                }
+            }
         }
         catch { }
 
@@ -79,9 +117,26 @@
             try
             {
                 BalanceResults = await Notus.Web3.Application.Balance(wallet.Wallet.WalletKey);
+                StateHasChanged();
                 currencyList = await Notus.Web3.Application.GetCurrencyList();
+
+                // nft/list/walletkey
+                List<string> nftUIDlist = JsonSerializer.Deserialize<List<string>>(await Notus.Core.Function.FindAvailableNode(
+                    $"nft/list/{wallet.Wallet.WalletKey}",
+                    Notus.Core.Variable.NetworkType.MainNet,
+                    Notus.Core.Variable.NetworkLayer.Layer2));
+
+                if (WatermarkedNFTS.Count < nftUIDlist.Count)
+                {
+                    WatermarkedNFTS.Clear();
+                    foreach (var item in nftUIDlist)
+                    {
+                        WatermarkedNFTS.Add(item, await Notus.Core.Function.FindAvailableNode($"nft/detail/{wallet.Wallet.WalletKey}/{item}", Notus.Core.Variable.NetworkType.MainNet, Notus.Core.Variable.NetworkLayer.Layer2));
+                    }
+                }
             }
             catch { }
+            await Task.Delay(2000);
             StateHasChanged();
         }
     }
@@ -98,6 +153,14 @@
         return "cannot find source";
     }
 
+    private async Task ShowPrivateImage(string UID)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add("privateKey", wallet.Wallet.PrivateKey);
+        parameters.Add("uid", UID);
+        await Modal.Show<ShowImage>("", parameters).Result;
+    }
+
     private void SendModal()
     {
         var parameters = new ModalParameters();
@@ -110,5 +173,111 @@
     {
         await new Notus.Functions.General(sessionStorage).Logout();
         NavigationManager.NavigateTo("/");
+    }
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        const int chunkSize = 2048;
+        byte[] file = new byte[e.File.Size];
+        await e.File.OpenReadStream().ReadAsync(file);
+
+        int chunkLength = (int)Math.Ceiling(Convert.ToDouble(file.Length / chunkSize));
+        Notus.Core.Variable.FileTransferStruct tmpFileStruct = Notus.Core.MergeRawData.FileUpload(
+            new Notus.Core.Variable.FileTransferStruct()
+            {
+                FileName = e.File.Name,
+                ChunkSize = chunkSize,
+                ChunkCount = chunkLength,
+                FileSize = e.File.Size,
+                FileHash = new Notus.HashLib.SHA256().Calculate(file),
+                Level = Notus.Core.Variable.ProtectionLevel.High,
+                WaterMarkIsLight = true,
+                PublicKey = wallet.Wallet.PublicKey,
+                Sign = "",
+            }
+        );
+
+        string responseData = await Notus.Core.Function.FindAvailableNode(
+            "storage/file/new",
+            new Dictionary<string, string>()
+            {
+                {
+                    "data",
+                    JsonSerializer.Serialize(tmpFileStruct)
+                }
+            },
+            Notus.Core.Variable.NetworkType.MainNet,
+            Notus.Core.Variable.NetworkLayer.Layer2
+        );
+        Notus.Core.Variable.BlockResponse tmpStartObj = JsonSerializer.Deserialize<Notus.Core.Variable.BlockResponse>(responseData);
+
+        int chunk = 0;
+        chunkMax = chunkLength;
+        for (int i = 0; i < chunkLength; i++)
+        {
+            chunkNow++;
+            StateHasChanged();
+            byte[] tmpArray = new byte[chunkSize];
+            Array.Copy(file, chunk, tmpArray, 0, tmpArray.Length);
+            string sendDataStr = JsonSerializer.Serialize(
+                new Notus.Core.Variable.FileChunkStruct()
+                {
+                    Count = i,
+                    Data = System.Convert.ToBase64String(tmpArray),
+                    UID = tmpStartObj.UID
+                }
+            );
+            bool innerLoopExit = false;
+            while (innerLoopExit == false)
+            {
+                string responseChunk = await Notus.Core.Function.FindAvailableNode(
+                    "storage/file/update",
+                    new Dictionary<string, string>() {
+                    {
+                        "data", sendDataStr
+                    }
+                    },
+                    Notus.Core.Variable.NetworkType.MainNet,
+                    Notus.Core.Variable.NetworkLayer.Layer2
+                );
+                Notus.Core.Variable.BlockResponse tmpChunkObj = JsonSerializer.Deserialize<Notus.Core.Variable.BlockResponse>(responseChunk);
+                if (tmpChunkObj.Result == Notus.Core.Variable.BlockStatusCode.AddedToQueue)
+                {
+                    innerLoopExit = true;
+                }
+                else
+                {
+                    await Task.Delay(2500);
+                }
+            }
+            chunk += chunkSize;
+        }
+
+        await Modal.Show<Confirm>().Result;
+        chunkMax = 0;
+        StateHasChanged();
+
+        bool tmpStatusBool = true;
+        while (tmpStatusBool)
+        {
+            await Task.Delay(3000);
+
+            Notus.Core.Variable.BlockResponse result = JsonSerializer.Deserialize<Notus.Core.Variable.BlockResponse>(await Notus.Core.Function.FindAvailableNode(
+                $"storage/file/status/{tmpStartObj.UID}",
+                Notus.Core.Variable.NetworkType.MainNet,
+                Notus.Core.Variable.NetworkLayer.Layer2
+            ));
+
+            if (result.Result == Notus.Core.Variable.BlockStatusCode.Completed)
+            {
+                tmpStatusBool = false;
+            }
+        }
+
+        // nft/list/walletkey
+        List<string> nftUIDlist = JsonSerializer.Deserialize<List<string>>(await Notus.Core.Function.FindAvailableNode(
+            $"nft/list/{wallet.Wallet.WalletKey}",
+            Notus.Core.Variable.NetworkType.MainNet,
+            Notus.Core.Variable.NetworkLayer.Layer2));
     }
 }
