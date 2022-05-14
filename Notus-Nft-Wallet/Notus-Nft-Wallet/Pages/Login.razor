@@ -1,0 +1,34 @@
+﻿@page "/login"
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject NavigationManager NavigationManager
+
+<div class="mb-2">
+    <input @bind="privateKey" type="text" placeholder="Private Key" />
+    <button class="ml-1" @onclick="async () => await LoginToAccount()">Login</button>
+</div>
+@foreach (var privateKey in privateKeyList)
+{
+    <p><button @onclick="async () => await LoginToAccount(privateKey)">Login via Private Key @privateKeyList.IndexOf(privateKey)</button></p>
+}
+
+
+@code {
+    string privateKey { get; set; }
+    private List<string> privateKeyList = new List<string>() { "01839ff01cdc75b9eeefe5b67a42618dfe1965114cf74049568b803a36ca8c42", "d015a6e71691614d05392b679716d464d85985c1765f82ed3fa3483ea6e7bdd0", "e42cb22e3f21f9e2839629f89da5cf5dd6b0ce680dcc8cd8a3503c5e481d3276" };
+
+    public async Task LoginToAccount(string pKey = null)
+    {
+        if (pKey == null)
+        {
+            var response = await new Notus.Functions.General(sessionStorage).AddWalletToSession(privateKey);
+            if (response)
+                NavigationManager.NavigateTo("/wallet");
+        }
+        else
+        {
+            var response = await new Notus.Functions.General(sessionStorage).AddWalletToSession(pKey);
+            if (response)
+                NavigationManager.NavigateTo("/wallet");
+        }
+    }
+}
