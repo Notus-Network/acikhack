@@ -19,6 +19,8 @@ namespace Notus_File_Uploader_Test
                     ChunkCount = chunkLength,
                     FileSize = size,
                     FileHash = new Notus.HashLib.SHA256().Calculate(file),
+                    Level = Notus.Core.Variable.ProtectionLevel.High,
+                    WaterMarkIsLight = true,
                     PublicKey = "4a0656f1184f9682bbbe36405c49794054c228d977b3d112740ab9b4795b6acea41ba30b1245cf91627a6e8094342d8aeacb2ddbe18e2b6dff03f384f8a52232",
                     Sign = "",
                 }
@@ -83,6 +85,8 @@ namespace Notus_File_Uploader_Test
 
 
 /*
+
+
 {
 	"CurveName":"prime256v1",
 	"Words":[
@@ -93,4 +97,5 @@ namespace Notus_File_Uploader_Test
 	"PublicKey":"4a0656f1184f9682bbbe36405c49794054c228d977b3d112740ab9b4795b6acea41ba30b1245cf91627a6e8094342d8aeacb2ddbe18e2b6dff03f384f8a52232",
 	"WalletKey":"NREfW5vVHfvNs3LYieAM6JT9LPwVjcy2ujEjkk"
 }
+
 */
