@@ -1,0 +1,77 @@
+﻿@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject NavigationManager NavigationManager
+@inject IJSRuntime js
+
+<div class="modal" tabindex="-1" role="dialog" modal="true" style="z-index: 1050;display: inherit;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send Money to Another Wallet</h5>
+                <button type="button" class="close" @onclick="async () => await Close()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form>
+                    <div class="form-group">
+                        <label for="idTxtReceiverAddress" class="col-form-label">Receiver:</label>
+                        <input id="idTxtReceiverAddress" @bind="receiverWalletKey" type="text" style="background:#ddd;border-color:#000;" class="form-control" placeholder="Receiver Address" />
+                    </div>
+                    <div class="form-group">
+                        <label for="idTxtHowMuchCoin" class="col-form-label">Balance:</label>
+                        <input id="idTxtHowMuchCoin" @bind="receiverVolume" type="text" style="background:#ddd;border-color:#000;" class="form-control" placeholder="Balance" />
+                    </div>
+                    <div class="form-group">
+                        <label for="idTxtHowMuchCoin" class="col-form-label">Select Currency: </label>
+                        <select @bind="CurrencyName">
+                            <option value=""></option>
+                            @foreach (var currency in Balance)
+                            {
+                                <option value="@currency.Key">
+                                    <p class="m-0">Name: @currency.Key | Balance: @currency.Value </p>
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button id="idBtnSend_Send" type="button" @onclick="async () => await SendTransaction()" class="btn btn-primary">Send</button>
+                <button id="idBtnSend_Cancel" type="button" @onclick="async () => await Close()" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    [Parameter] public Notus.Web3.Application.LocalWalletList wallet { get; set; }
+    [Parameter] public Dictionary<string, string> Balance { get; set; }
+    public string CurrencyName { get; set; }
+    string receiverWalletKey = "", receiverVolume = "";
+
+    async Task Close() => await BlazoredModal.CloseAsync(ModalResult.Ok(true));
+
+    private async Task SendTransaction()
+    {
+        if (string.IsNullOrEmpty(receiverWalletKey) || string.IsNullOrEmpty(receiverVolume) || string.IsNullOrEmpty(CurrencyName))
+            return;
+
+        Notus.Core.Variable.CryptoTransactionStruct transaction = Notus.Core.Wallet.Transaction.Sign(new Notus.Core.Variable.CryptoTransactionBeforeStruct()
+        {
+            PrivateKey = wallet.Wallet.PrivateKey,
+            Receiver = receiverWalletKey,
+            Sender = wallet.Wallet.WalletKey,
+            Volume = receiverVolume,
+            Network = Notus.Core.Variable.NetworkType.MainNet,
+            CurveName = Notus.Core.Variable.Default_EccCurveName,
+            Currency = CurrencyName,
+        });
+
+        await Notus.Core.Wallet.Transaction.Send(transaction, Notus.Core.Variable.NetworkType.MainNet);
+
+        await Close();
+    }
+}

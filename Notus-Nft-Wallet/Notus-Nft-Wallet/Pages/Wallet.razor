@@ -103,7 +103,7 @@
         var parameters = new ModalParameters();
         parameters.Add("Wallet", wallet);
         parameters.Add("Balance", BalanceResults);
-        //Modal.Show<SendModal>("", parameters);
+        Modal.Show<SendModal>("", parameters);
     }
 
     private async Task Logout()
