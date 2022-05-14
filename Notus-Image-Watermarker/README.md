@@ -41,7 +41,7 @@ Korunma seviyesine bağlı olarak yazı büyüklüğü, yazı saydamlığı ve y
 
 - float[] { FontSize, XSpace, YSpace, Opacity } (Değerleri içeren float dizisi)
 
-#### (Public) Watermarker.AddWatermarkToImage(string sourceName, string destinationPath, string walletKey, ProtectionLevel protectionLevel, bool imageIsLight)
+#### (Public) Watermarker.AddWatermarkToImage(string sourceName, string destinationPath, string walletKey, ProtectionLevel protectionLevel, bool isJpeg, bool imageIsLight)
 
 Verilen adresteki fotoğrafa watermark ekleyen ve verilen pathe kaydeden fonksiyon.
 
@@ -51,6 +51,7 @@ Verilen adresteki fotoğrafa watermark ekleyen ve verilen pathe kaydeden fonksiy
 - string destinationPath (Watermark eklenmiş fotoğrafın hangi klasöre kaydedileceği)
 - string walletKey (Kullanıcının wallet keyi)
 - ProtectionLevel protectionLevel (Korunma Seviyesi)
+- bool isJpeg (Fotoğrafın jpg veya png formatında olup olmadığını sağlayan bool parametresi)
 - bool imageIsLight (Açık renkli fotoğraflarda koyu renkli, Koyu renkli fotoğraflarda ise açık renkli watermark gözükmesi gerektiği için bu parametre eklenmiştir)
 
 ##### Döndürdüğü Değerler
