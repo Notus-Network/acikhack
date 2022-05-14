@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 
 <div>
+    <button class="mb-5" @onclick="Logout">Çıkış Yap</button>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="balance-tab" data-bs-toggle="tab" data-bs-target="#balance" type="button" role="tab" aria-controls="balance" aria-selected="true">Balance</button>
@@ -14,8 +15,29 @@
             <button class="nav-link" id="createnft-tab" data-bs-toggle="tab" data-bs-target="#createnft" type="button" role="tab" aria-controls="createnft" aria-selected="false">Create NFT</button>
         </li>
     </ul>
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="balance" role="tabpanel" aria-labelledby="balance-tab">Balance</div>
+    <div class="tab-content mb-2" id="myTabContent">
+        <div class="tab-pane fade show active" id="balance" role="tabpanel" aria-labelledby="balance-tab">
+            @if (wallet != null)
+            {
+                @if (BalanceResults != null)
+                {
+                    <table class="table table-sm w-25">
+                        <tbody>
+                            @foreach (var bal in BalanceResults)
+                            {
+                                var url = getCurrencyLogoUrl(bal.Key);
+                                <tr>
+                                    <th><img src="@url" alt="@bal.Key" height="40" /></th>
+                                    <td><span class="font-weight-bold" style="font-size:30px;">@bal.Key</span></td>
+                                    <td><span class="font-weight-bold" style="font-size:30px;">@bal.Value</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <button @onclick="SendModal">Gönder</button>
+                }
+            }
+        </div>
         <div class="tab-pane fade" id="mynfts" role="tabpanel" aria-labelledby="mynfts-tab">My NFTs</div>
         <div class="tab-pane fade" id="createnft" role="tabpanel" aria-labelledby="createnft-tab">Create NFT</div>
     </div>
