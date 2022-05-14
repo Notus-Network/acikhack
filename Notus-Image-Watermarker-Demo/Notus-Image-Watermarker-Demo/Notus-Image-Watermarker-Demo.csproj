@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Notus-Image-Watermarker" Version="1.0.3" />
+    <PackageReference Include="Notus-Image-Watermarker" Version="1.0.4" />
   </ItemGroup>
 
 </Project>

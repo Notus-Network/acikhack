@@ -43,12 +43,12 @@ namespace Notus.Image.Watermarker
                 graphic.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
 
                 float t = 0, x = 0, y = 0;
-                for (int j = 1; j <= 20; j++, y += values[2])
+                for (int j = 1; j <= 40; j++, y += values[2])
                 {
                     x = 0;
                     if (j % 2 == 0)
                         t = (textSize.Width / 2);
-                    for (int i = 1; i <= 10; i++, x += values[1])
+                    for (int i = 1; i <= 40; i++, x += values[1])
                     {
                         graphic.DrawString(walletKey, font, brush, new PointF(x + t, y));
                         x += textSize.Width;
@@ -60,7 +60,7 @@ namespace Notus.Image.Watermarker
                 {
                     using(FileStream fs = new FileStream(destinationPath, FileMode.Create, FileAccess.ReadWrite))
                     {
-                        zbitmap.Save(memory, isJpeg ? System.Drawing.Imaging.ImageFormat.Jpeg : System.Drawing.Imaging.ImageFormat.Png);
+                        bitmap.Save(memory, isJpeg ? System.Drawing.Imaging.ImageFormat.Jpeg : System.Drawing.Imaging.ImageFormat.Png);
                         byte[] bytes = memory.ToArray();
                         fs.Write(bytes, 0, bytes.Length);
                     }
