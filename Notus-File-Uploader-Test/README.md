@@ -2,6 +2,10 @@
 
 Bu proje, Notus Networkün dosya yükleme APIleri aracılığıyla görüntü yüklenmesi testi için hazırlanmıştır.
 
+## Uygulamayı Nasıl Çalıştırabilirim?
+
+Bir alt dizinde (acikhack\Notus-File-Uploader-Test\Notus-File-Uploader-Test) **dotnet run** komutu kullanmanız yeterlidir.
+
 ## Bağımlılıklar
 
 Notus Core kütüphanesini kullanır.

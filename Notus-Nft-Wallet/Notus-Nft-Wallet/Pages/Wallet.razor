@@ -130,6 +130,7 @@
             {
                 BalanceResults = await Notus.Web3.Application.Balance(wallet.Wallet.WalletKey);
                 currencyList = await Notus.Web3.Application.GetCurrencyList();
+                StateHasChanged();
             }
             catch { }
         }
@@ -251,7 +252,6 @@
         await Modal.Show<Confirm>().Result;
         chunkMax = 0;
         chunkNow = 0;
-        StateHasChanged();
 
         bool tmpStatusBool = true;
         while (tmpStatusBool)
@@ -269,6 +269,8 @@
                 tmpStatusBool = false;
             }
         }
+
+        StateHasChanged();
 
         // nft/list/walletkey
         List<string> nftUIDlist = JsonSerializer.Deserialize<List<string>>(await Notus.Core.Function.FindAvailableNode(

@@ -2,13 +2,17 @@
 
 Bu proje, Notus Image Watermarker kütüphanesinin nasıl kullanacağının canlı bir demosudur.
 
+## Uygulamayı Nasıl Çalıştırabilirim?
+
+Bir alt dizinde (acikhack\Notus-Image-Watermarker-Demo\Notus-Image-Watermarker-Demo) **dotnet run** komutu kullanmanız yeterlidir.
+
 ## Bağımlılıklar
 
 Notus Image Watermarker kütüphanesini kullanır.
 
 ### Nuget
 
-- [**Notus-Image-Watermarker**](https://www.nuget.org/packages/Notus-Image-Watermarker/1.0.3)
+- [**Notus-Image-Watermarker**](https://www.nuget.org/packages/Notus-Image-Watermarker)
 
 ## Demo ile İlgili Genel Bilgi
 
