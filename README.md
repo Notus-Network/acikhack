@@ -2,7 +2,9 @@
 ## Projenin Adı
 ### NFT'lerin Kopyalanmasının Önlenmesi
 
-Amacımız : NFT olarak oluşturulan Ses, Görsel, PDF gibi dökümanların Arweave, IPFS gibi platformlardan kopyalanarak farklı Network'lerde kopyalarının oluşturulmasının engellenmesi amacıyla oluşturulan bir çözümdür.
+Amacımız, NFT olarak oluşturulan Ses, Görsel, PDF gibi dökümanların Arweave, IPFS gibi platformlardan kopyalanarak farklı Network'lerde kopyalarının oluşturulmasının engellenmesi amacıyla oluşturulan bir çözümdür.  
+
+Bu proje için kullandığımız nuget paketlerine [**bu**](https://www.nuget.org/profiles/notus.network) adresten erişebilirsiniz.
 
 ## Projenin Dosyalarının Tanımları
 - **/Notus-Image-Watermarker**: Bu kütüphane, görsellerin watermark olarak imzalanması için oluşturulmuş bir kütüphanedir.
