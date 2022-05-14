@@ -61,6 +61,7 @@ namespace Notus_Image_Watermarker_Demo
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(151, 28);
             this.comboBox1.TabIndex = 3;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBoxChangedIndex);
             // 
             // comboBox2
             // 
@@ -72,21 +73,22 @@ namespace Notus_Image_Watermarker_Demo
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(151, 28);
             this.comboBox2.TabIndex = 4;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBoxChangedIndex);
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(14, 99);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 78);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(260, 245);
+            this.pictureBox1.Size = new System.Drawing.Size(453, 360);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(280, 99);
+            this.pictureBox2.Location = new System.Drawing.Point(480, 78);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(260, 245);
+            this.pictureBox2.Size = new System.Drawing.Size(453, 360);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 6;
             this.pictureBox2.TabStop = false;
@@ -95,14 +97,14 @@ namespace Notus_Image_Watermarker_Demo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(945, 564);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Notus Image Watermarker Demo";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();

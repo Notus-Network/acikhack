@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Notus_Image_Watermarker_Demo
@@ -18,24 +12,39 @@ namespace Notus_Image_Watermarker_Demo
             InitializeComponent();
         }
 
+        private void CreateWatermarkImage()
+        {
+            Notus.Image.Watermarker.Watermarker.ProtectionLevel protectionLevel = (Notus.Image.Watermarker.Watermarker.ProtectionLevel)comboBox1.SelectedIndex;
+            bool isLight = false;
+            bool isJpeg = false;
+            if (comboBox2.SelectedIndex == 0)
+                isLight = true;
+            else
+                isLight = false;
+
+            if (Path.GetExtension(openFileDialog1.FileName) == ".jpg")
+                isJpeg = false;
+            else
+                isJpeg = true;
+
+            pictureBox2.Image = null;
+            pictureBox2.Refresh();
+
+            try
+            {
+                bool tmpResult = Notus.Image.Watermarker.Watermarker.AddWatermarkToImage(openFileDialog1.FileName, "tmp" + Path.GetExtension(openFileDialog1.FileName), "testwalletkey", protectionLevel, isJpeg, isLight);
+                pictureBox1.ImageLocation = openFileDialog1.FileName;
+                pictureBox2.ImageLocation = "tmp" + Path.GetExtension(openFileDialog1.FileName);
+            }
+            catch { }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             openFileDialog1.Filter = "JPG Dosyası (*.jpg)|*.jpg|PNG Dosyası (*.png)|*.png";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                Notus.Image.Watermarker.Watermarker.ProtectionLevel protectionLevel = (Notus.Image.Watermarker.Watermarker.ProtectionLevel)comboBox1.SelectedIndex;
-                bool isLight = false;
-                if (comboBox2.SelectedIndex == 0)
-                    isLight = true;
-                else
-                    isLight = false;
-
-                try
-                {
-                    Notus.Image.Watermarker.Watermarker.AddWatermarkToImage(openFileDialog1.FileName, "tmp" + Path.GetExtension(openFileDialog1.FileName), "testwalletkey", protectionLevel, isLight);
-                    pictureBox1.Image = Image.FromFile(openFileDialog1.FileName);
-                    pictureBox2.Image = Image.FromFile("tmp" + Path.GetExtension(openFileDialog1.FileName));
-                } catch { }
+                CreateWatermarkImage();
             }
         }
 
@@ -43,6 +52,14 @@ namespace Notus_Image_Watermarker_Demo
         {
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
+        }
+
+        private void comboBoxChangedIndex(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(openFileDialog1.FileName))
+            {
+                CreateWatermarkImage();
+            }
         }
     }
 }

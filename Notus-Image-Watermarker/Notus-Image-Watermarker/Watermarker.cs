@@ -27,7 +27,7 @@ namespace Notus.Image.Watermarker
 
             return new float[] { 0, 0, 0, 0 };
         }
-        public static bool AddWatermarkToImage(string sourceName, string destinationPath, string walletKey, ProtectionLevel protectionLevel, bool imageIsLight = false)
+        public static bool AddWatermarkToImage(string sourceName, string destinationPath, string walletKey, ProtectionLevel protectionLevel, bool isJpeg, bool imageIsLight = false)
         {
             float[] values = ProtectionType(protectionLevel, imageIsLight);
             Font font = new Font("Arial", values[0]);
@@ -55,7 +55,16 @@ namespace Notus.Image.Watermarker
                     }
                     t = 0;
                 }
-
+                
+                using (MemoryStream memory = new MemoryStream()) 
+                {
+                    using(FileStream fs = new FileStream(destinationPath, FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        zbitmap.Save(memory, isJpeg ? System.Drawing.Imaging.ImageFormat.Jpeg : System.Drawing.Imaging.ImageFormat.Png);
+                        byte[] bytes = memory.ToArray();
+                        fs.Write(bytes, 0, bytes.Length);
+                    }
+                }
 
                 bitmap.Save(destinationPath);
                 return true;
