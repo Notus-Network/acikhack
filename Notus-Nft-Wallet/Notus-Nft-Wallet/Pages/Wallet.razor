@@ -3,6 +3,10 @@
 @inject NavigationManager NavigationManager
 
 <div>
+    @if (wallet != null)
+    {
+        <p class="h3">@wallet.Wallet.WalletKey</p>
+    }
     <button class="mb-5" @onclick="Logout">Çıkış Yap</button>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -62,8 +66,8 @@
                 <option value="@Notus.Core.Variable.ProtectionLevel.High">High Level</option>
             </select>
             <select @bind="isWatermarkLight" class="form-select" aria-label="Fotoğraf beyaza mı yatkın siyaha mı">
-                <option value="true" selected>Siyah</option>
-                <option value="false">Beyaz</option>
+                <option value="false" selected>Siyah</option>
+                <option value="true">Beyaz</option>
             </select>
             @if (chunkMax != 0)
             {
@@ -82,7 +86,7 @@
     Dictionary<string, string> WatermarkedNFTS { get; set; }
 
     Notus.Core.Variable.ProtectionLevel protectionLevel = Notus.Core.Variable.ProtectionLevel.Low;
-    string isWatermarkLight = "true";
+    string isWatermarkLight = "false";
 
     protected async override Task OnInitializedAsync()
     {
@@ -101,7 +105,7 @@
         try
         {
             BalanceResults = await Notus.Web3.Application.Balance(wallet.Wallet.WalletKey);
-            // nft/list/walletkey
+            
             List<string> nftUIDlist = JsonSerializer.Deserialize<List<string>>(await Notus.Core.Function.FindAvailableNode(
                 $"nft/list/{wallet.Wallet.WalletKey}",
                 Notus.Core.Variable.NetworkType.MainNet,
