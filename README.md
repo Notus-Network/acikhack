@@ -7,6 +7,7 @@ Amacımız : NFT olarak oluşturulan Ses, Görsel, PDF gibi dökümanların Arwe
 ## Projenin Dosyalarının Tanımları
 - **/Notus-Image-Watermarker**: Bu kütüphane, görsellerin watermark olarak imzalanması için oluşturulmuş bir kütüphanedir.
 - **/Notus-Image-Watermarker-Demo**: Bu proje, Notus Image Watermarker kütüphanesinin nasıl kullanacağının canlı bir demosudur.
+- **/Notus-File-Uploader-Test**: Bu proje, Notus Networkün dosya yükleme APIleri aracılığıyla görüntü yüklenmesi testi için hazırlanmıştır.
 
 ## Yazılımsal Gereksinimler
 
