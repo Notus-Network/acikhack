@@ -1,0 +1,92 @@
+﻿@page "/wallet"
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject NavigationManager NavigationManager
+
+<div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="balance-tab" data-bs-toggle="tab" data-bs-target="#balance" type="button" role="tab" aria-controls="balance" aria-selected="true">Balance</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="mynfts-tab" data-bs-toggle="tab" data-bs-target="#mynfts" type="button" role="tab" aria-controls="mynfts" aria-selected="false">NFTs</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="createnft-tab" data-bs-toggle="tab" data-bs-target="#createnft" type="button" role="tab" aria-controls="createnft" aria-selected="false">Create NFT</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="balance" role="tabpanel" aria-labelledby="balance-tab">Balance</div>
+        <div class="tab-pane fade" id="mynfts" role="tabpanel" aria-labelledby="mynfts-tab">My NFTs</div>
+        <div class="tab-pane fade" id="createnft" role="tabpanel" aria-labelledby="createnft-tab">Create NFT</div>
+    </div>
+</div>
+
+@code {
+    Notus.Web3.Application.LocalWalletList wallet { get; set; }
+    Dictionary<string, string> BalanceResults { get; set; }
+    List<Notus.Core.Variable.CurrencyList> currencyList { get; set; }
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            wallet = await new Notus.Functions.General(sessionStorage).GetWalletFromSession();
+
+            if (wallet is null)
+                throw new Exception();
+        }
+        catch { NavigationManager.NavigateTo("/"); }
+
+        currencyList = await Notus.Web3.Application.GetCurrencyList();
+
+        try
+        {
+            BalanceResults = await Notus.Web3.Application.Balance(wallet.Wallet.WalletKey);
+        }
+        catch { }
+
+        Ticker();
+    }
+
+    async void Ticker()
+    {
+        while (true)
+        {
+            await Task.Delay(10000);
+            try
+            {
+                BalanceResults = await Notus.Web3.Application.Balance(wallet.Wallet.WalletKey);
+                currencyList = await Notus.Web3.Application.GetCurrencyList();
+            }
+            catch { }
+            StateHasChanged();
+        }
+    }
+
+    private string getCurrencyLogoUrl(string currencyName)
+    {
+        if (!string.IsNullOrEmpty(currencyList.FirstOrDefault(x => x.Tag == currencyName).Logo.Base64))
+            return "data:image/png;base64," + currencyList.FirstOrDefault(x => x.Tag == currencyName).Logo.Base64;
+        else if (!string.IsNullOrEmpty(currencyList.FirstOrDefault(x => x.Tag == currencyName).Logo.Url))
+            return currencyList.FirstOrDefault(x => x.Tag == currencyName).Logo.Url;
+        else if (!string.IsNullOrEmpty(currencyList.FirstOrDefault(x => x.Tag == currencyName).Logo.Source))
+            return currencyList.FirstOrDefault(x => x.Tag == currencyName).Logo.Source;
+
+        return "cannot find source";
+    }
+
+    private void SendModal()
+    {
+        var parameters = new ModalParameters();
+        parameters.Add("Wallet", wallet);
+        parameters.Add("Balance", BalanceResults);
+        //Modal.Show<SendModal>("", parameters);
+    }
+
+    private async Task Logout()
+    {
+        await new Notus.Functions.General(sessionStorage).Logout();
+        NavigationManager.NavigateTo("/");
+    }
+}
