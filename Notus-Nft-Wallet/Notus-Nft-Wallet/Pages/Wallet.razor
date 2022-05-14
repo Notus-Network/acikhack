@@ -129,27 +129,9 @@
             try
             {
                 BalanceResults = await Notus.Web3.Application.Balance(wallet.Wallet.WalletKey);
-                StateHasChanged();
                 currencyList = await Notus.Web3.Application.GetCurrencyList();
-
-                // nft/list/walletkey
-                List<string> nftUIDlist = JsonSerializer.Deserialize<List<string>>(await Notus.Core.Function.FindAvailableNode(
-                    $"nft/list/{wallet.Wallet.WalletKey}",
-                    Notus.Core.Variable.NetworkType.MainNet,
-                    Notus.Core.Variable.NetworkLayer.Layer2));
-
-                if (WatermarkedNFTS.Count < nftUIDlist.Count)
-                {
-                    WatermarkedNFTS.Clear();
-                    foreach (var item in nftUIDlist)
-                    {
-                        WatermarkedNFTS.Add(item, await Notus.Core.Function.FindAvailableNode($"nft/detail/{wallet.Wallet.WalletKey}/{item}", Notus.Core.Variable.NetworkType.MainNet, Notus.Core.Variable.NetworkLayer.Layer2));
-                    }
-                }
             }
             catch { }
-            await Task.Delay(2000);
-            StateHasChanged();
         }
     }
 
@@ -293,5 +275,14 @@
             $"nft/list/{wallet.Wallet.WalletKey}",
             Notus.Core.Variable.NetworkType.MainNet,
             Notus.Core.Variable.NetworkLayer.Layer2));
+
+        if (WatermarkedNFTS.Count < nftUIDlist.Count)
+        {
+            WatermarkedNFTS.Clear();
+            foreach (var item in nftUIDlist)
+            {
+                WatermarkedNFTS.Add(item, await Notus.Core.Function.FindAvailableNode($"nft/detail/{wallet.Wallet.WalletKey}/{item}", Notus.Core.Variable.NetworkType.MainNet, Notus.Core.Variable.NetworkLayer.Layer2));
+            }
+        }
     }
 }
