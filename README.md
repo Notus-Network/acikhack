@@ -34,4 +34,3 @@ Notus Network tarafından geliştirilen Web3 ve Core kitaplıklarını kullanmak
 - [**Ömer Göksoy**](https://github.com/omergoksoy)
 - [**Mehmet Kırçal**](https://github.com/Iamknownasfesal)
 - [**Sahap Kurtaran**](https://www.behance.net/sahapkurtaran)
-- [**Şehnaz Erdoğan**](https://tr.linkedin.com/in/%C5%9Fehnaz-erdo%C4%9Fan-65171621)
